@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.min.js"></script>
+	<script src="https://unpkg.com/base-58@0.0.1/Base58.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAABFvgAARb4B0IHyYgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAIpSURBVHic5du5edtAFEXhM66HqM/OBGVWexz2ohBO/PhJFJZZ3oLlNkCcP5BIYACByzmPj8fjb+Q1pKgPzjmPwBtASunjdrv9ibiOEICv8c8LCUJwB5iLl0UguAKsxcu8EdwASuJlngguADXxMi8Ec4CWeJkHgilAT7zMGsEMQCNeZolgAqAZL7NCUAewiJdZIKgCWMbLtBHUADziZZoIKgCe8TIthG6AiHiZBkIXQGS8rBehGWAP8bIehCaAPcXLWhGqAfYYL2tBqALYc7ysFqEY4AjxshqEIoAjxctKETYBjhgvK0FYBThyvGwLYRHgDPGyNYRZgDPFy5YQfgCcMV42h/AN4MzxsleEJ8AV4mVfERJcK14mCOmK8bKU0sevaZo+oy8katM0fSaA+/3+O6UUelAhYOMwDO/PP4IXQxiHYXiHl3+DF0F4xsPMF6GTI3yLh4WvwidF+BEPKz+GToYwGw8bP4dPgrAYDwU3RA6OsBoPhbfEDoqwGQ8VN0UPhlAUD5W3xQ+CUBwPDQ9Gdo5QFQ+Nj8Z2ilAdDx0PR3eG0BQPnY/Hd4LQHA8KBySCEbriQemITBBCdzwoHpJyRlCJB+Vjck4IavFgcFDSGEE1HoyOyhohqMeD4WFpZQSTeDA+Lq+EYBYPDi9MdCKYxoPTKzONCObx4PjSVCWCSzw4vzZXiOAWDwEvTm4guMZD0KuzCwju8RD48vQLQkh8+HLO4//zCWH7B6TVRCpVqUZ2AAAAAElFTkSuQmCC" />
+	<title>Waves Wall</title>
+	<style>
+	body {
+		font-family: Consolas, monospace;
+		font-size: 14px;
+	}
+	.flex-item {
+		display: flex;
+	}
+	.bordered {
+		border: 1px solid lightgray;
+		border-radius:5px;
+	}
+	#app {
+		flex-direction: column;
+		height: 98vh;
+	}
+	input {
+		font-family: inherit;
+		font-size: inherit;
+	}
+	#msg {
+		flex-basis: 100%;
+		margin: 10px 0px 0px 5px;
+		padding: 5px;
+	}
+	.input-wrapper {
+		min-height: 38px;
+	}
+	#msg-list {
+		flex-basis: 100%;
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+	}
+	.msg-wrapper {
+		padding: 5px;
+		margin: 10px 0px 0px 5px;
+		overflow: auto;
+		resize: vertical;
+		min-height: 200px;
+		max-height: 100%;
+		height: 100%;
+	}
+	#msg-list > li {
+		padding: 1px;
+	}
+	.info {
+		flex-direction: column;
+		margin: 5px 0px 0px 5px;
+		padding: 5px;
+		min-height: 54px;
+	}
+	.info > div {
+		padding: 1px;
+	}
+	.token-input {
+		border: 0px;
+		padding: 0px;
+		margin: 0px;
+		text-align: right;
+	}
+	#footer {
+		margin: 5px 5px 0px 5px;
+		flex-direction: column;
+	}
+</style>
+</head>
+<body>
+	<div id="app" class="flex-item">
+		<div class="flex-item info bordered">
+			<div>
+				Wall: <a :href="'https://wavesexplorer.com/address/' + wall">{{ wall }}</a>
+			</div>
+			<div>
+				Amount: <input size="5" class="token-input" v-model = "amount" placeholder="0.001" /> WAVES
+			</div>
+			<div>
+				Fee: <input size="5" class="token-input" v-model = "fee" placeholder="0.001" /> WAVES
+			</div>
+		</div>
+		<div class="input-wrapper flex-item">
+			<input id="msg" class = "bordered" v-model = "message" @keyup.enter = "send" placeholder="Message" minlength ="1" maxlength="70" autofocus />
+		</div>
+		<div class="msg-wrapper flex-item bordered">
+			<ul id="msg-list">
+				<li v-for="msg in messages">
+					{{ formatTime(msg.time)}} <a :href="'https://wavesexplorer.com/address/' + msg.sender">{{ formatSender(msg.sender) }}</a>: {{ msg.text }}
+				</li>
+			</ul>
+		</div>
+		<div id="footer" class="flex-item">
+			<a href="https://github.com/bodrych/waveswall">GitHub</a>
+			<a href="https://forum.wavesplatform.com/t/waves-keeper-beta/3547/21">Waves Keeper</a>
+		</div>
+	</div>
+	<script>
+		var app = new Vue({
+			el: '#app',
+			data: {
+				message: '',
+				messages: [],
+				wall: '3PPPPPpPDKZYvBHmSB71PTwnepyWHMrNgfY',
+				amount: '0.001',
+				fee: '0.001'
+			},
+			created: function() {
+				this.loadPosts();
+				setInterval(this.loadPosts, 1000);
+			},
+			methods: {
+				formatSender: function(sender) {
+					return '...' + sender.slice(-7);
+				},
+				formatTime: function(timestamp) {
+					let time = new Date(timestamp);
+					return time.toLocaleString('en-US', {hour12: false});
+				},
+				loadPosts: async function() {
+					let rawData = await fetch('https://nodes.wavesplatform.com/transactions/address/' + this.wall + '/limit/100');
+					let data = await rawData.json();
+					this.messages = [];
+					data[0].forEach(item => {
+						if (item.attachment) {
+							let msg = this.decode(item.attachment);
+							this.messages.push({sender: item.sender, text: msg, time: item.timestamp});
+						}
+					})
+				},
+				decode: function(text) {
+					let bytes = Base58.decode(text);
+					let str = '';
+					for (let i = 0; i < bytes.length; i++) {
+						str += String.fromCharCode(bytes[i]);
+					}
+					return decodeURIComponent(escape(str));
+				},
+				send: async function() {
+					let msg = this.message;
+					this.message = '';
+					let params = {
+						type: 4,
+						data: {
+							amount: {
+								assetId: 'WAVES',
+								tokens: this.amount
+							},
+							fee: {
+								assetId: 'WAVES',
+								tokens: this.fee
+							},
+							recipient: this.wall,
+							attachment: msg
+						}
+					}
+					if (this.checkKeeper()) {
+						try {
+							let res = await window.Waves.signAndPublishTransaction(params);
+						} catch (err) {
+							alert(err.message);
+						}
+					} else {
+						alert('Please, install Waves Keeper');
+					}
+				},
+				checkKeeper: function() {
+					return typeof window.Waves !== 'undefined';
+				}
+			}
+		});
+	</script>
+</body>
+</html>
