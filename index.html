@@ -10,7 +10,7 @@
 	<style>
 	body {
 		font-family: Consolas, monospace;
-		font-size: 14px;
+		font-size: 13px;
 	}
 	.flex-item {
 		display: flex;
@@ -21,7 +21,7 @@
 	}
 	#app {
 		flex-direction: column;
-		height: 98vh;
+		height: 95vh;
 	}
 	input {
 		font-family: inherit;
@@ -99,7 +99,7 @@
 		</div>
 		<div id="footer" class="flex-item">
 			<a href="https://github.com/bodrych/waveswall">GitHub</a>
-			<a href="https://forum.wavesplatform.com/t/waves-keeper-beta/3547/21">Waves Keeper</a>
+			<a href="https://forum.wavesplatform.com/t/waves-keeper-beta/3547">Waves Keeper</a>
 		</div>
 	</div>
 	<script>
@@ -109,12 +109,16 @@
 				message: '',
 				messages: [],
 				wall: '3PPPPPpPDKZYvBHmSB71PTwnepyWHMrNgfY',
+				// wall: '3N9Fige8uU547yEAy8vYCWSwyCfHZt3orNL',
+				node: 'https://nodes.wavesplatform.com',
+				// node: 'https://testnode1.wavesnodes.com',
 				amount: '0.001',
-				fee: '0.001'
+				fee: '0.001',
+				last: 0
 			},
 			created: function() {
-				this.loadPosts();
-				setInterval(this.loadPosts, 1000);
+				this.update();
+				setInterval(this.update, 1000);
 			},
 			methods: {
 				formatSender: function(sender) {
@@ -124,16 +128,25 @@
 					let time = new Date(timestamp);
 					return time.toLocaleString('en-US', {hour12: false});
 				},
-				loadPosts: async function() {
-					let rawData = await fetch('https://nodes.wavesplatform.com/transactions/address/' + this.wall + '/limit/100');
+				loadPosts: async function(limit) {
+					let rawData = await fetch(this.node + '/transactions/address/' + this.wall + '/limit/' + limit);
 					let data = await rawData.json();
-					this.messages = [];
-					data[0].forEach(item => {
-						if (item.attachment) {
-							let msg = this.decode(item.attachment);
-							this.messages.push({sender: item.sender, text: msg, time: item.timestamp});
-						}
-					})
+					return data;
+				},
+				update: async function() {
+					let lastTx = await this.loadPosts(1);
+					let lastTime = lastTx[0][0].timestamp;
+					if (lastTime != this.last) {
+						let data = await this.loadPosts(100);
+						this.messages = [];
+						data[0].forEach(item => {
+							if (item.attachment) {
+								let msg = this.decode(item.attachment);
+								this.messages.push({sender: item.sender, text: msg, time: item.timestamp});
+							}
+						});
+						this.last = lastTime.valueOf();
+					}
 				},
 				decode: function(text) {
 					let bytes = Base58.decode(text);
