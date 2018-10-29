@@ -34,10 +34,9 @@
 		border: none;
 	}
 	.input-wrapper {
-		min-height: 38px;
-		align-items: baseline;
+		align-items: center;
 		justify-content: space-between;
-		margin: 10px 0px 0px 0px;
+		margin-bottom: 5px;
 	}
 	#msg-list {
 		flex-basis: 100%;
@@ -47,20 +46,20 @@
 	}
 	.msg-wrapper {
 		padding: 5px;
-		margin: 0px 0px 0px 0px;
 		overflow: auto;
 		resize: vertical;
 		min-height: 200px;
 		max-height: 100%;
-		height: 70vh;
+		height: 80vh;
 	}
 	#msg-list > li {
 		padding: 1px;
 	}
 	.info {
-		margin: 0px 0px 0px 0px;
+		margin-top: 5px;
 		padding: 5px;
-		/*min-height: 54px;*/
+		justify-content: space-between;
+		flex-wrap: wrap;
 	}
 	.info > div {
 		/*padding: 10px;*/
@@ -80,9 +79,10 @@
 		color: black;
 		transition-duration: 0.4s;
 		padding: 5px;
-		margin-left: 5px;
+		margin-right: 5px;
 		width: 70px;
 		text-align: center;
+		outline: none;
 	}
 	.button:hover {
 		background-color: lightgray;
@@ -103,40 +103,57 @@
 		display: flex;
 		flex-direction: column;
 	}
+	#msg-input-wrapper {
+		flex-basis: 100%;
+	}
+	#amount-wrapper {
+		margin-left: 5px;
+		align-items: center;
+	}
+	#amount {
+		width: 60px;
+		border: none;
+		padding: 5px;
+	}
 </style>
 </head>
 <body>
 	<div id="app" class="flex-item">
-		<div class="flex-col info bordered">
-			<div>
-				Wall: <a :href="'https://wavesexplorer.com/address/' + wall">{{ wall }}</a>
-			</div>
-			<div>
-				Amount: <input size="5" class="token-input" v-model = "amount" placeholder="0.001" /> WAVES
-			</div>
-			<div>
-				Fee: <input size="5" class="token-input" v-model = "fee" placeholder="0.001" /> WAVES
-			</div>
-		</div>
 		<div class="input-wrapper flex-item">
+			<input type="submit" class="button bordered" value="Send" @click="send">
 			<div id="msg-count-wrapper" class="flex-item bordered">
-				<div style="flex-basis: 100%" class="flex-item">
+				<div id="msg-input-wrapper" class="flex-item">
 					<input id="msg" class="bordered" v-model="message" @keyup.enter="send" placeholder="Message" minlength ="1" maxlength="140" autofocus />
 				</div>
 				<div id="count-wrapper">{{message.length}}/140</div>
 			</div>
-			<input type="submit" class="button bordered" value="Send" @click="send">
+			<div id="amount-wrapper" class="flex-item bordered">
+				<div id="amount-input-wrapper" class="flex-item">
+					<input type="number" step="0.001" min="0.001" id="amount" class="" v-model="amount" placeholder="Amount" minlength ="1" maxlength="5" />
+				</div>
+				<div id="count-wrapper">WAVES</div>
+			</div>
 		</div>
 		<div class="msg-wrapper flex-item bordered">
 			<ul id="msg-list">
 				<li v-for="msg in messages">
-					{{ formatTime(msg.time)}} <a :href="'https://wavesexplorer.com/address/' + msg.sender">{{ formatSender(msg.sender) }}</a>: {{ msg.text }}
+					{{ formatTime(msg.time)}} <a :href="'https://wavesexplorer.com/address/' + msg.sender">{{ formatSender(msg.sender) }}</a>: {{ msg.text }} ({{ msg.amount / 100000000 }} WAVES)
 				</li>
 			</ul>
 		</div>
-		<div id="footer" class="flex-item">
-			<a href="https://github.com/bodrych/waveswall">GitHub</a>
-			<a href="https://forum.wavesplatform.com/t/waves-keeper-beta/3547">Waves Keeper</a>
+		<div class="flex-row info bordered">
+			<div>
+				Wall: <a :href="'https://wavesexplorer.com/address/' + wall">{{ wall }}</a>
+			</div>
+			<div>
+				Fee: {{ fee }} WAVES
+			</div>
+			<div>
+				<a href="https://github.com/bodrych/waveswall">GitHub</a>
+			</div>
+			<div>
+				<a href="https://forum.wavesplatform.com/t/waves-keeper-beta/3547">Waves Keeper</a>
+			</div>
 		</div>
 	</div>
 	<script>
@@ -191,9 +208,14 @@
 						let data = await this.loadPosts(100);
 						this.messages = [];
 						data[0].forEach(item => {
-							if (item.attachment) {
+							if (item.attachment && item.amount >= 100000) {
 								let msg = this.decode(item.attachment);
-								this.messages.push({sender: item.sender, text: msg, time: item.timestamp});
+								this.messages.push({
+									sender: item.sender,
+									text: msg,
+									time: item.timestamp,
+									amount: item.amount
+								});
 							}
 						});
 						this.last = lastTime.valueOf();
@@ -209,7 +231,6 @@
 				},
 				send: async function() {
 					let msg = this.message;
-					this.message = '';
 					let params = {
 						type: 4,
 						data: {
@@ -228,6 +249,7 @@
 					if (this.checkKeeper()) {
 						try {
 							let res = await window.Waves.signAndPublishTransaction(params);
+							this.message = '';
 						} catch (err) {
 							alert(err.message);
 						}
