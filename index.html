@@ -52,6 +52,15 @@
 		max-height: 100%;
 		height: 80vh;
 	}
+	.pinned-wrapper {
+		padding: 5px;
+		margin-bottom: 5px;
+/*		overflow: auto;
+		resize: vertical;
+		min-height: 200px;
+		max-height: 100%;
+		height: 80vh;*/
+	}
 	#msg-list > li {
 		padding: 1px;
 	}
@@ -137,7 +146,7 @@
 		<div class="msg-wrapper flex-item bordered">
 			<ul id="msg-list">
 				<li v-for="msg in messages">
-					{{ formatTime(msg.time)}} <a :href="'https://wavesexplorer.com/address/' + msg.sender">{{ formatSender(msg.sender) }}</a>: {{ msg.text }} ({{ msg.amount / 100000000 }} WAVES)
+					{{ formatTime(msg.time)}} <a :href="'https://wavesexplorer.com/tx/' + msg.id">{{ formatSender(msg.sender) }}</a>: {{ msg.text }} ({{ msg.amount / 100000000 }} WAVES)
 				</li>
 			</ul>
 		</div>
@@ -161,6 +170,7 @@
 			el: '#app',
 			data: {
 				message: '',
+				pinnedMessage: {},
 				messages: [],
 				wall: '3PPPPPpPDKZYvBHmSB71PTwnepyWHMrNgfY',
 				// wall: '3N9Fige8uU547yEAy8vYCWSwyCfHZt3orNL',
@@ -168,6 +178,8 @@
 				// node: 'https://testnode1.wavesnodes.com',
 				amount: '0.001',
 				fee: '0.001',
+				minAmount: 100000,
+				pinAmount: 1000000,
 				last: 0
 			},
 			created: function() {
@@ -208,18 +220,28 @@
 						let data = await this.loadPosts(100);
 						this.messages = [];
 						data[0].forEach(item => {
-							if (item.attachment && item.amount >= 100000) {
+							if (item.attachment && item.amount >= this.minAmount && item.assetId == null) {
 								let msg = this.decode(item.attachment);
 								this.messages.push({
 									sender: item.sender,
 									text: msg,
 									time: item.timestamp,
-									amount: item.amount
+									amount: item.amount,
+									id: item.id
 								});
+								let pinned = this.messages.find(element => {
+									return element.amount > this.pinAmount ? element : false;
+								});
+								this.pinnedMessage = pinned ? pinned : '';
 							}
 						});
 						this.last = lastTime.valueOf();
 					}
+				},
+				findMax: function(arr) {
+					return arr.reduce(function(prev, curr){ 
+        		return prev.amount >= curr.amount ? prev : curr;
+    			});
 				},
 				decode: function(text) {
 					let bytes = Base58.decode(text);
