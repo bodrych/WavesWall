@@ -124,6 +124,12 @@
 		border: none;
 		padding: 5px;
 	}
+	input::-webkit-input-placeholder{
+    color: lightgray;
+	}
+	input:-moz-placeholder{
+    color: lightgray;
+	}
 </style>
 </head>
 <body>
@@ -146,7 +152,7 @@
 		<div class="msg-wrapper flex-item bordered">
 			<ul id="msg-list">
 				<li v-for="msg in messages">
-					{{ formatTime(msg.time)}} <a :href="'https://wavesexplorer.com/tx/' + msg.id">{{ formatSender(msg.sender) }}</a>: {{ msg.text }} ({{ msg.amount / 100000000 }} WAVES)
+					{{ formatTime(msg.time)}} <a :href="'https://wavesexplorer.com/tx/' + msg.id">{{ formatSender(msg.sender) }}</a>: {{ msg.text }} ({{ (msg.amount / 100000000).toLocaleString('ru-ru', {maximumSignificantDigits: 20}) }} WAVES)
 				</li>
 			</ul>
 		</div>
@@ -178,7 +184,7 @@
 				// node: 'https://testnode1.wavesnodes.com',
 				amount: '0.001',
 				fee: '0.001',
-				minAmount: 100000,
+				minAmount: 1,
 				pinAmount: 1000000,
 				last: 0
 			},
