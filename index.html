@@ -28,11 +28,19 @@
 			</div>
 		</div>
 		<div class="msg-wrapper flex-item bordered">
-			<div id="msg-list">
-				<div v-for="msg in messages">
-					{{ formatTime(msg.time)}} <a :href="'https://wavesexplorer.com/tx/' + msg.id">{{ formatSender(msg.sender) }}</a>: {{ msg.text }} ({{ (msg.amount / 100000000).toLocaleString('ru-ru', {maximumSignificantDigits: 20}) }} WAVES)
-				</div>
-			</div>
+			<table id="msg-list">
+				<tr v-for="msg in messages">
+					<td>
+					{{ formatTime(msg.time)}}
+					</td>
+					<td>
+						<a :href="'https://wavesexplorer.com/tx/' + msg.id">{{ formatSender(msg.sender) }}</a>:
+					</td>
+					<td>
+						{{ msg.text }} ({{ (msg.amount / 100000000).toLocaleString('ru-ru', {maximumSignificantDigits: 20}) }} WAVES)
+					</td>
+				</tr>
+			</table>
 		</div>
 		<div class="flex-row info bordered">
 			<div>
