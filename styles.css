@@ -6,7 +6,7 @@ body {
 	display: flex;
 }
 .bordered {
-	border: 1px solid lightgray;
+	border: 1px solid deepskyblue;
 	border-radius:3px;
 }
 #app {
@@ -73,9 +73,12 @@ input {
 	width: 70px;
 	text-align: center;
 	outline: none;
+	border: 1px solid deepskyblue;
+	border-radius:3px;
 }
 .button:hover {
-	background-color: lightgray;
+	background-color: deepskyblue;
+	/*color: white;*/
 }
 #msg-count-wrapper {
 	flex-basis: 100%;
