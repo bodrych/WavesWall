@@ -27,7 +27,7 @@ input {
 .input-wrapper {
 	align-items: center;
 	justify-content: space-between;
-	margin-bottom: 5px;
+	margin-top: 5px;
 }
 #msg-list {
 /*	flex-basis: 100%;

@@ -51,10 +51,10 @@ var app = new Vue({
 			if (lastTime != this.last) {
 				let data = await this.loadPosts(100);
 				this.messages = [];
-				data[0].forEach(item => {
+				await data[0].forEach(item => {
 					if (item.attachment && item.amount >= this.minAmount && item.assetId == null) {
 						let msg = this.decode(item.attachment);
-						this.messages.push({
+						this.messages.unshift({
 							sender: item.sender,
 							text: msg,
 							time: item.timestamp,
@@ -67,6 +67,7 @@ var app = new Vue({
 						this.pinnedMessage = pinned ? pinned : '';
 					}
 				});
+				this.$refs.msgWrapper.scrollTop = this.$refs.msgWrapper.scrollHeight;
 				this.last = lastTime.valueOf();
 			}
 		},

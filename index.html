@@ -12,6 +12,21 @@
 </head>
 <body>
 	<div id="app" class="flex-item">
+		<div class="msg-wrapper flex-item bordered" ref="msgWrapper">
+			<table id="msg-list">
+				<tr v-for="msg in messages">
+					<td>
+					{{ formatTime(msg.time)}}
+					</td>
+					<td>
+						<a :href="'https://wavesexplorer.com/tx/' + msg.id">{{ formatSender(msg.sender) }}</a>:
+					</td>
+					<td>
+						{{ msg.text }} ({{ (msg.amount / 100000000).toLocaleString('ru-ru', {maximumSignificantDigits: 20}) }} WAVES)
+					</td>
+				</tr>
+			</table>
+		</div>
 		<div class="input-wrapper flex-item">
 			<input type="submit" class="button" value="Send" @click="send">
 			<div id="msg-count-wrapper" class="flex-item bordered">
@@ -26,21 +41,6 @@
 				</div>
 				<div id="count-wrapper">WAVES</div>
 			</div>
-		</div>
-		<div class="msg-wrapper flex-item bordered">
-			<table id="msg-list">
-				<tr v-for="msg in messages">
-					<td>
-					{{ formatTime(msg.time)}}
-					</td>
-					<td>
-						<a :href="'https://wavesexplorer.com/tx/' + msg.id">{{ formatSender(msg.sender) }}</a>:
-					</td>
-					<td>
-						{{ msg.text }} ({{ (msg.amount / 100000000).toLocaleString('ru-ru', {maximumSignificantDigits: 20}) }} WAVES)
-					</td>
-				</tr>
-			</table>
 		</div>
 		<div class="flex-row info bordered">
 			<div>
