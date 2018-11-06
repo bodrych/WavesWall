@@ -27,7 +27,7 @@ var app = new Vue({
 			return time.toLocaleString();
 		},
 		loadPosts: async function(limit) {
-			let response = await axios.get(this.node + '/transactions/address/' + this.wall + '/limit/' + limit);
+			let response = await axios.get(`${this.node}/transactions/address/${this.wall}/limit/${limit}`);
 			return response.data;
 		},
 		findByKey: function(array, id) {
@@ -38,7 +38,7 @@ var app = new Vue({
 		},
 		getName: async function(sender) {
 			try {
-				let response = await axios.get(this.node + '/addresses/data/' + sender + '/waves-wall-name');
+				let response = await axios.get(`${this.node}/addresses/data/${sender}/waves-wall-name`);
 				return response.data ? response.data : '';
 			} catch(err) {
 				console.log(err);
@@ -54,19 +54,19 @@ var app = new Vue({
 				await data[0].forEach(item => {
 					if (item.attachment && item.amount >= this.minAmount && item.assetId == null) {
 						let msg = this.decode(item.attachment);
-						this.messages.unshift({
+						this.messages.push({
 							sender: item.sender,
 							text: msg,
 							time: item.timestamp,
 							amount: item.amount,
 							id: item.id
 						});
-						let pinned = this.messages.find(element => {
-							return element.amount > this.pinAmount ? element : false;
-						});
-						this.pinnedMessage = pinned ? pinned : '';
 					}
 				});
+				let pinned = await this.messages.reverse().find(element => {
+					return element.amount > this.pinAmount ? element : false;
+				});
+				this.pinnedMessage = pinned ? pinned : '';
 				this.$refs.msgWrapper.scrollTop = this.$refs.msgWrapper.scrollHeight;
 				this.last = lastTime.valueOf();
 			}
