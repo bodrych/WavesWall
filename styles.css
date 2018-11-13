@@ -57,7 +57,7 @@ input {
 .button {
 	background-color: dodgerblue;
 	color: white;
-	/*transition-duration: 0.2s;*/
+	transition-duration: 0.2s;
 	padding: 5px;
 	margin-right: 5px;
 	width: 70px;
@@ -65,8 +65,9 @@ input {
 	outline: none;
 	border: 1px solid dodgerblue;
 }
-.button:active {
+.button:hover {
 	background-color: mediumblue;
+	border: 1px solid mediumblue;
 	/*color: black;*/
 }
 #msg-count-wrapper {
@@ -103,23 +104,20 @@ input::-webkit-input-placeholder{
 input:-moz-placeholder{
   color: lightgray;
 }
-a:link {
-  color: black;
-  text-decoration: underline;
+a {
+	text-decoration: underline;
   text-decoration-color: dodgerblue
 }
-a:visited {
-	color: black;
-  text-decoration: underline;
-  text-decoration-color: dodgerblue
+a:link, a:visited {
+  color: black;
 }
 a:hover {
 	color: dodgerblue;
-  text-decoration: underline;
-  text-decoration-color: dodgerblue
 }
 a:active {
 	color: blue;
-  text-decoration: underline;
-  text-decoration-color: dodgerblue
+}
+a.button {
+	text-decoration: none;
+	color: white;
 }

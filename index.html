@@ -28,7 +28,8 @@
 			</table>
 		</div>
 		<div class="input-wrapper flex-item">
-			<input type="submit" class="button" value="Send" @click="send">
+			<!-- <input type="submit" class="button" value="Send" @click="send"> -->
+			<a class="button" :href="`https://client.wavesplatform.com/#send/WAVES?recipient=${wall}&amount=${amount}&attachment=${message}&strict=true`" @click="send" target="_blank">Send</a>
 			<div id="msg-count-wrapper" class="flex-item bordered">
 				<div id="msg-input-wrapper" class="flex-item">
 					<input id="msg" class="bordered" v-model="message" @keyup.enter="send" placeholder="Message" minlength ="1" maxlength="140" autofocus />

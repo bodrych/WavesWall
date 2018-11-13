@@ -1,4 +1,4 @@
-var app = new Vue({
+const app = new Vue({
 	el: '#app',
 	data: {
 		message: '',
@@ -83,32 +83,33 @@ var app = new Vue({
 			return decodeURIComponent(escape(str));
 		},
 		send: async function() {
-			let msg = this.message;
-			let params = {
-				type: 4,
-				data: {
-					amount: {
-						assetId: 'WAVES',
-						tokens: this.amount
-					},
-					fee: {
-						assetId: 'WAVES',
-						tokens: this.fee
-					},
-					recipient: this.wall,
-					attachment: msg
-				}
-			}
-			if (this.checkKeeper()) {
-				try {
-					let res = await window.Waves.signAndPublishTransaction(params);
-					this.message = '';
-				} catch (err) {
-					alert(err.message);
-				}
-			} else {
-				alert('Please, install Waves Keeper.\nFollow the link at the bottom of the page.');
-			}
+			this.message = '';
+			// let msg = this.message;
+			// let params = {
+			// 	type: 4,
+			// 	data: {
+			// 		amount: {
+			// 			assetId: 'WAVES',
+			// 			tokens: this.amount
+			// 		},
+			// 		fee: {
+			// 			assetId: 'WAVES',
+			// 			tokens: this.fee
+			// 		},
+			// 		recipient: this.wall,
+			// 		attachment: msg
+			// 	}
+			// }
+			// if (this.checkKeeper()) {
+			// 	try {
+			// 		let res = await window.Waves.signAndPublishTransaction(params);
+			// 		this.message = '';
+			// 	} catch (err) {
+			// 		alert(err.message);
+			// 	}
+			// } else {
+			// 	alert('Please, install Waves Keeper.\nFollow the link at the bottom of the page.');
+			// }
 		},
 		checkKeeper: function() {
 			return typeof window.Waves !== 'undefined';
