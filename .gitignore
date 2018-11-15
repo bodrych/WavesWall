@@ -1,0 +1,6 @@
+/dist/*
+/node_modules/*
+/logo.*
+/now.json
+/package-lock.json
+/contract.js
