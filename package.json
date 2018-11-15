@@ -1,7 +1,7 @@
 {
   "name": "waves-wall",
   "version": "1.0.0",
-  "description": "The Waves Wall displays messages from transactions",
+  "description": "A simple chat/wall/bulletin board on the Waves Platform",
   "main": "index.js",
   "scripts": {
     "server": "webpack-dev-server --mode development --hot",
