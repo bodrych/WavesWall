@@ -1,7 +1,7 @@
 {
-  "name": "waves-wall-webpack",
+  "name": "waves-wall",
   "version": "1.0.0",
-  "description": "The Waves Wall displays messages from last 100 transactions to its address [3PPPPPpPDKZYvBHmSB71PTwnepyWHMrNgfY](https://wavesexplorer.com/address/3PPPPPpPDKZYvBHmSB71PTwnepyWHMrNgfY).",
+  "description": "The Waves Wall displays messages from transactions",
   "main": "index.js",
   "scripts": {
     "server": "webpack-dev-server --mode development --hot",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bodrych/waveswall.git"
+    "url": "git@github.com:bodrych/waves-wall.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bodrych/waveswall/issues"
+    "url": "https://github.com/bodrych/waves-wall/issues"
   },
-  "homepage": "https://github.com/bodrych/waveswall#readme",
+  "homepage": "https://github.com/bodrych/waves-wall#readme",
   "dependencies": {
     "axios": "^0.18.0",
     "base-58": "0.0.1",
