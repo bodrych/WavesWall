@@ -1,18 +1,18 @@
 <template>
-	<div class="msg-wrapper flex-item bordered" ref="msgWrapper">
-		<table id="msg-list">
-			<tr v-for="msg in messages">
-				<td>
+	<div id="msg-wrapper" class="bordered" ref="msgWrapper">
+		<div id="msg-list">
+			<template v-for="msg in messages">
+				<div class="time">
 					{{ formatTime(msg.time)}}
-				</td>
-				<td>
+				</div>
+				<div>
 					<a :href="'https://wavesexplorer.com/tx/' + msg.id">{{ formatSender(msg.sender) }}</a>:
-				</td>
-				<td>
+				</div>
+				<div>
 					{{ msg.text }} ({{ (msg.amount / 100000000).toLocaleString('ru-ru', {maximumSignificantDigits: 20}) }} WAVES)
-				</td>
-			</tr>
-		</table>
+				</div>
+			</template>
+		</div>
 	</div>
 </template>
 
@@ -73,12 +73,19 @@
 </script>
 
 <style scoped>
-	.flex-item {
-		display: flex;
-	}
-	.msg-wrapper {
+	#msg-wrapper {
 		padding: 5px;
 		overflow: auto;
 		height: 100%;
+	}
+	#msg-list {
+		display: grid;
+		grid-template-columns: auto auto minmax(auto,100%);
+		grid-column-gap: 10px;
+		grid-row-gap: 5px;
+		align-items: baseline;
+	}
+	.time {
+		white-space:nowrap;
 	}
 </style>

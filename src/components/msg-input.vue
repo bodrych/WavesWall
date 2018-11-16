@@ -1,5 +1,5 @@
 <template>
-	<div class="input-wrapper flex-item">
+	<div id="input-wrapper" class="flex-item">
 		<a class="button" :href="`https://client.wavesplatform.com/#send/WAVES?recipient=${$parent.wall}&amount=${amount}&attachment=${message}&strict=true`" @click="message = ''" target="_blank">Send</a>
 		<div id="msg-count-wrapper" class="flex-item bordered">
 			<div id="msg-input-wrapper" class="flex-item">
@@ -28,20 +28,10 @@
 </script>
 
 <style scoped>
-	.flex-item {
-		display: flex;
-	}
-	.input-wrapper {
+	#input-wrapper {
 		align-items: center;
 		justify-content: space-between;
 		margin-top: 5px;
-	}
-	a.button {
-		text-decoration: none;
-		color: white;
-	}
-	.bordered {
-		border: 1px solid dodgerblue;
 	}
 	#msg-count-wrapper {
 		flex-basis: 100%;
@@ -68,25 +58,5 @@
 	#count-wrapper {
 		color: lightgray;
 		margin-right: 5px;
-	}
-	.button {
-		background-color: dodgerblue;
-		color: white;
-		transition-duration: 0.2s;
-		padding: 5px;
-		margin-right: 5px;
-		width: 70px;
-		text-align: center;
-		outline: none;
-		border: 1px solid dodgerblue;
-	}
-	.button:hover {
-		background-color: mediumblue;
-		border: 1px solid mediumblue;
-		/*color: black;*/
-	}
-	.pinned-wrapper {
-		padding: 5px;
-		margin-bottom: 5px;
 	}
 </style>

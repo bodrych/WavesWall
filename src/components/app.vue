@@ -33,10 +33,4 @@
 		justify-content: space-between;
 		height: calc(100vh - 16px);
 	}
-	.token-input {
-		border: 0px;
-		padding: 0px;
-		margin: 0px;
-		text-align: right;
-	}
 </style>

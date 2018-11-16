@@ -39,3 +39,23 @@ input:-moz-placeholder{
 .flex-item {
 	display: flex;
 }
+.button {
+	background-color: dodgerblue;
+	color: white;
+	transition-duration: 0.2s;
+	padding: 5px;
+	margin-right: 5px;
+	width: 70px;
+	text-align: center;
+	outline: none;
+	border: 1px solid dodgerblue;
+}
+.button:hover {
+	background-color: mediumblue;
+	border: 1px solid mediumblue;
+	/*color: black;*/
+}
+a.button {
+	text-decoration: none;
+	color: white;
+}
