@@ -26,7 +26,7 @@
 				messages: [],
 				pinnedMessage: {},
 				last: 0,
-				minAmount: 1,
+				minAmount: 100000,
 				pinAmount: 1000000
 			}
 		},
@@ -46,7 +46,7 @@
 				let lastTx = await api.loadPosts(this.$parent.node, this.$parent.wall, 1);
 				let lastTime = lastTx[0][0].timestamp;
 				if (lastTime != this.last) {
-					let data = await api.loadPosts(this.$parent.node, this.$parent.wall, 100);
+					let data = await api.loadPosts(this.$parent.node, this.$parent.wall, 1000);
 					this.messages = [];
 					await data[0].forEach(item => {
 						if (item.attachment && item.amount >= this.minAmount && item.assetId == null) {
@@ -74,7 +74,6 @@
 
 <style scoped>
 	#msg-wrapper {
-		padding: 5px;
 		overflow: auto;
 		height: 100%;
 	}
@@ -84,6 +83,7 @@
 		grid-column-gap: 10px;
 		grid-row-gap: 5px;
 		align-items: baseline;
+		padding: 5px;
 	}
 	.time {
 		white-space:nowrap;
